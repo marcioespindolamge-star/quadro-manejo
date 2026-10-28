@@ -50,7 +50,7 @@ const cv=id=>document.getElementById(id);
 const AREAS_DOC='configuracao_areas/areas';
 let areaEditIndex=null;
 function formatarHa(n){return String(Math.round(n*100)/100).replace('.',',')+' HA'}
-function atualizarTotalHectares(){const total=fields.reduce((sum,f)=>sum+(Number(String(f[1]).replace(/[^\\d,.]/g,'').replace(',','.'))||0),0);document.getElementById('totalHectares').textContent=formatarHa(total)}
+function atualizarTotalHectares(){const total=fields.reduce((sum,f)=>sum+(Number(String(f[1]).replace(' HA','').replace(',','.'))||0),0);document.getElementById('totalHectares').textContent=formatarHa(total)}
 async function carregarAreas(){if(!db||!authReady)return;try{const snap=await db.doc(AREAS_DOC).get();if(snap.exists&&Array.isArray(snap.data().areas)){const porChave=new Map(snap.data().areas.map(a=>[a.key,a]));fields=fields.map((f,i)=>{const a=porChave.get(areaKeys[i]);return a&&typeof a.nome==='string'&&a.nome.trim()&&Number.isFinite(Number(a.ha))&&Number(a.ha)>0?[a.nome,formatarHa(Number(a.ha))]:f})}atualizarTotalHectares();prepararSeletorAreas()}catch(e){console.error('Carregar áreas:',e);alert('Não foi possível carregar as alterações das lavouras. Verifique a conexão antes de editar.') }}
 function abrirEditarArea(i){if(!authReady||!fields[i])return;areaEditIndex=i;document.getElementById('areaEditNome').value=fields[i][0];document.getElementById('areaEditHa').value=String(fields[i][1]).replace(' HA','').replace(',','.');document.getElementById('areaEditErro').textContent='';document.getElementById('areaEditModal').classList.add('on');document.getElementById('areaEditNome').focus()}
 function fecharEditarArea(){document.getElementById('areaEditModal').classList.remove('on');areaEditIndex=null}
