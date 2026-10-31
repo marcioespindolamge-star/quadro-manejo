@@ -84,7 +84,7 @@ if(auth){
    authLock.style.display=authReady?'none':'flex';
    document.getElementById('authStatus').style.display=authReady?'block':'none';
    if(user&&!authReady){showAuthError('Esta conta não está autorizada.');auth.signOut().catch(console.error)}
-   if(authReady){showAuthError('');carregarBanco()}
+   if(authReady){showAuthError('');carregarBanco();if(new URLSearchParams(location.search).get('abrir')==='caderno')setTimeout(()=>openCaderno(),350)}
  },e=>showAuthError('Erro ao verificar acesso: '+e.message));
  authForm.addEventListener('submit',async e=>{
    e.preventDefault();const btn=document.getElementById('authSubmit');btn.disabled=true;showAuthError('');
